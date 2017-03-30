@@ -1,0 +1,19 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2012
+Project("{22C041F1-ACC4-ED03-1F48-9B107FF5471A}") = "SpaceWanderer", "SpaceWanderer.vcxproj", "{A3E53D0A-655A-D6EF-788C-BD9C7393AD5F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A3E53D0A-655A-D6EF-788C-BD9C7393AD5F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A3E53D0A-655A-D6EF-788C-BD9C7393AD5F}.Debug|Win32.Build.0 = Debug|Win32
+		{A3E53D0A-655A-D6EF-788C-BD9C7393AD5F}.Release|Win32.ActiveCfg = Release|Win32
+		{A3E53D0A-655A-D6EF-788C-BD9C7393AD5F}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

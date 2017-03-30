@@ -1,0 +1,52 @@
+﻿Build started 29.03.2017 13:19:24.
+     1>Project "D:\Diploma\Projects\SpaceWanderer\Builds\VisualStudio2012\SpaceWanderer.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ID:\Programs\Programming\VST_SDK\VST3_SDK /I..\..\JuceLibraryCode /I..\..\..\..\..\Programs\Programming\JUCE\modules /ZI /nologo /W4 /WX- /MP /Od /Oy- /D _CRT_SECURE_NO_WARNINGS /D WIN32 /D _WINDOWS /D DEBUG /D _DEBUG /D JUCER_VS2012_78A501F=1 /D JUCE_APP_VERSION=1.0.0 /D JUCE_APP_VERSION_HEX=0x10000 /D _WINDLL /Gm- /EHsc /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"Debug\\" /Fd"Debug\\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt ..\..\Source\Algorithm.cpp ..\..\Source\PluginControls.cpp ..\..\Source\PluginEditor.cpp ..\..\Source\PluginProcessor.cpp
+         Algorithm.cpp
+         PluginControls.cpp
+         PluginEditor.cpp
+         PluginProcessor.cpp
+     1>d:\diploma\projects\spacewanderer\source\plugineditor.cpp(77): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>d:\diploma\projects\spacewanderer\source\pluginprocessor.cpp(64): warning C4100: 'index' : unreferenced formal parameter
+     1>d:\diploma\projects\spacewanderer\source\pluginprocessor.cpp(68): warning C4100: 'index' : unreferenced formal parameter
+     1>d:\diploma\projects\spacewanderer\source\pluginprocessor.cpp(73): warning C4100: 'newName' : unreferenced formal parameter
+     1>d:\diploma\projects\spacewanderer\source\pluginprocessor.cpp(73): warning C4100: 'index' : unreferenced formal parameter
+     1>d:\diploma\projects\spacewanderer\source\pluginprocessor.cpp(78): warning C4100: 'samplesPerBlock' : unreferenced formal parameter
+     1>d:\diploma\projects\spacewanderer\source\pluginprocessor.cpp(78): warning C4100: 'sampleRate' : unreferenced formal parameter
+     1>d:\diploma\projects\spacewanderer\source\pluginprocessor.cpp(114): warning C4100: 'midiMessages' : unreferenced formal parameter
+     1>d:\diploma\projects\spacewanderer\source\pluginprocessor.cpp(146): warning C4100: 'destData' : unreferenced formal parameter
+     1>d:\diploma\projects\spacewanderer\source\pluginprocessor.cpp(153): warning C4100: 'sizeInBytes' : unreferenced formal parameter
+     1>d:\diploma\projects\spacewanderer\source\pluginprocessor.cpp(153): warning C4100: 'data' : unreferenced formal parameter
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Diploma\Projects\SpaceWanderer\Builds\VisualStudio2012\Debug\\SpaceWanderer.dll" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /NODEFAULTLIB:libcmt.lib /NODEFAULTLIB:msvcrt.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"Debug\\SpaceWanderer.pdb" /SUBSYSTEM:WINDOWS /LARGEADDRESSAWARE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Diploma\Projects\SpaceWanderer\Builds\VisualStudio2012\Debug\SpaceWanderer.lib" /MACHINE:X86 /SAFESEH:NO /DLL Debug\resources.res
+         Debug\\PluginControls.obj
+         Debug\\Algorithm.obj
+         Debug\\PluginProcessor.obj
+         Debug\\PluginEditor.obj
+         Debug\\juce_audio_basics.obj
+         Debug\\juce_audio_devices.obj
+         Debug\\juce_audio_formats.obj
+         Debug\\juce_audio_plugin_client_utils.obj
+         Debug\\juce_audio_plugin_client_VST2.obj
+         Debug\\juce_audio_plugin_client_VST3.obj
+         Debug\\juce_audio_processors.obj
+         Debug\\juce_core.obj
+         Debug\\juce_cryptography.obj
+         Debug\\juce_data_structures.obj
+         Debug\\juce_events.obj
+         Debug\\juce_graphics.obj
+         Debug\\juce_gui_basics.obj
+         Debug\\juce_gui_extra.obj
+         Debug\\juce_opengl.obj
+         Debug\\juce_video.obj
+            Creating library D:\Diploma\Projects\SpaceWanderer\Builds\VisualStudio2012\Debug\SpaceWanderer.lib and object D:\Diploma\Projects\SpaceWanderer\Builds\VisualStudio2012\Debug\SpaceWanderer.exp
+         SpaceWanderer.vcxproj -> D:\Diploma\Projects\SpaceWanderer\Builds\VisualStudio2012\Debug\SpaceWanderer.dll
+       PostBuildEvent:
+         copy /Y "D:\Diploma\Projects\SpaceWanderer\Builds\VisualStudio2012\Debug\SpaceWanderer.dll" "D:\Diploma\Projects\SpaceWanderer\Builds\VisualStudio2012\Debug\SpaceWanderer.vst3"
+         :VCEnd
+         Скопировано файлов:         1.
+     1>Done Building Project "D:\Diploma\Projects\SpaceWanderer\Builds\VisualStudio2012\SpaceWanderer.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:05.67

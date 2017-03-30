@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="e3VitW" name="SpaceWanderer" projectType="audioplug" version="1.0.0"
+              bundleIdentifier="com.Andrewregrets.SpaceWanderer" includeBinaryInAppConfig="1"
+              buildVST="1" buildVST3="1" buildAU="0" buildAUv3="0" buildRTAS="0"
+              buildAAX="0" pluginName="SpaceWanderer" pluginDesc="SpaceWanderer"
+              pluginManufacturer="Andrewregrets" pluginManufacturerCode="Andr"
+              pluginCode="Andr" pluginChannelConfigs="" pluginIsSynth="0" pluginWantsMidiIn="1"
+              pluginProducesMidiOut="1" pluginIsMidiEffectPlugin="0" pluginEditorRequiresKeys="0"
+              pluginAUExportPrefix="SpaceWandererAU" pluginRTASCategory=""
+              aaxIdentifier="" pluginAAXCategory="" jucerVersion="4.3.1" companyName="Andrewregrets"
+              companyEmail="andrewregrets@gmail.com" pluginVSTCategory="">
+  <MAINGROUP id="qDn1DF" name="SpaceWanderer">
+    <GROUP id="{7E1876E4-2C0A-32D4-765E-B5D057C146DB}" name="Source">
+      <FILE id="edRmp4" name="PluginControls.cpp" compile="1" resource="0"
+            file="Source/PluginControls.cpp"/>
+      <FILE id="B7rovm" name="PluginControls.h" compile="0" resource="0"
+            file="Source/PluginControls.h"/>
+      <FILE id="J285Ih" name="Algorithm.cpp" compile="1" resource="0" file="Source/Algorithm.cpp"/>
+      <FILE id="c8NcvL" name="Algorithm.h" compile="0" resource="0" file="Source/Algorithm.h"/>
+      <FILE id="QGHfYK" name="PluginProcessor.cpp" compile="1" resource="0"
+            file="Source/PluginProcessor.cpp"/>
+      <FILE id="KAuwoN" name="PluginProcessor.h" compile="0" resource="0"
+            file="Source/PluginProcessor.h"/>
+      <FILE id="t7ghyY" name="PluginEditor.cpp" compile="1" resource="0"
+            file="Source/PluginEditor.cpp"/>
+      <FILE id="J7MBn7" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+    </GROUP>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <VS2012 targetFolder="Builds/VisualStudio2012">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="1" optimisation="1" targetName="SpaceWanderer"/>
+        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="0" optimisation="3" targetName="SpaceWanderer"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../../../Programs/Programming/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../../Programs/Programming/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../../Programs/Programming/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../../Programs/Programming/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../../Programs/Programming/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../../Programs/Programming/JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../../../Programs/Programming/JUCE/modules"/>
+        <MODULEPATH id="juce_video" path="../../../Programs/Programming/JUCE/modules"/>
+        <MODULEPATH id="juce_opengl" path="../../../Programs/Programming/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../../../Programs/Programming/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../../Programs/Programming/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../../Programs/Programming/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../../Programs/Programming/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../../Programs/Programming/JUCE/modules"/>
+      </MODULEPATHS>
+    </VS2012>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_cryptography" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_opengl" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_video" showAllCode="1" useLocalCopy="0"/>
+  </MODULES>
+  <JUCEOPTIONS JUCE_QUICKTIME="disabled"/>
+</JUCERPROJECT>
