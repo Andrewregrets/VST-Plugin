@@ -125,7 +125,7 @@ void SpaceWandererAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
         float* outSamples = buffer.getWritePointer (channel);
 		const float* inSamples = buffer.getReadPointer(channel);
         
-		
+		//outSamples = bDelay.next();
 		// ..do something to the data...
 		Algorithm::distortSignal(inSamples, outSamples, numberOfSamples, PluginControls::getInstance()->getDistortionTresholdValue());
     }

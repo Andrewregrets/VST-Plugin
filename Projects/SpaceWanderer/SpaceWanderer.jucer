@@ -12,6 +12,12 @@
               companyEmail="andrewregrets@gmail.com" pluginVSTCategory="">
   <MAINGROUP id="qDn1DF" name="SpaceWanderer">
     <GROUP id="{7E1876E4-2C0A-32D4-765E-B5D057C146DB}" name="Source">
+      <GROUP id="{976EF3C8-FF4C-64FE-E378-3D436B798A9F}" name="Delay">
+        <FILE id="nAA9h4" name="Delay.cpp" compile="1" resource="0" file="Source/Delay.cpp"/>
+        <FILE id="Em1WiD" name="Delay.h" compile="0" resource="0" file="Source/Delay.h"/>
+        <FILE id="fubno8" name="DelayBuffer.cpp" compile="1" resource="0" file="Source/DelayBuffer.cpp"/>
+        <FILE id="Ew8zcM" name="DelayBuffer.h" compile="0" resource="0" file="Source/DelayBuffer.h"/>
+      </GROUP>
       <FILE id="edRmp4" name="PluginControls.cpp" compile="1" resource="0"
             file="Source/PluginControls.cpp"/>
       <FILE id="B7rovm" name="PluginControls.h" compile="0" resource="0"
