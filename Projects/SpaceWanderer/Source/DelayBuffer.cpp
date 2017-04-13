@@ -16,7 +16,6 @@ DelayBuffer::DelayBuffer(int size)
 	buffer = new float[size];
 	position = 0;
 	std::fill(buffer, buffer + length, 0);
-
 }
 
 DelayBuffer::~DelayBuffer()

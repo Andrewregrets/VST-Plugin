@@ -15,6 +15,24 @@ SpaceWandererAudioProcessor::SpaceWandererAudioProcessor()
                        )
 #endif
 {
+	lastPosInfo.resetToDefault();
+}
+
+void SpaceWandererAudioProcessor::updateCurrentTimeInfoFromHost()
+{
+    if (AudioPlayHead* ph = getPlayHead())
+    {
+        AudioPlayHead::CurrentPositionInfo newTime;
+
+        if (ph->getCurrentPosition (newTime))
+        {
+            lastPosInfo = newTime;  // Successfully got the current time from the host..
+            return;
+        }
+    }
+
+    // If the host fails to provide the current time, we'll just reset our copy to a default..
+    lastPosInfo.resetToDefault();
 }
 
 SpaceWandererAudioProcessor::~SpaceWandererAudioProcessor()
@@ -117,6 +135,10 @@ void SpaceWandererAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
     const int totalNumOutputChannels = getTotalNumOutputChannels();
 	const int numberOfSamples = buffer.getNumSamples();
 
+	playHead = this->getPlayHead();
+	playHead->getCurrentPosition(currentPositionInfo);
+	currentPositionInfo.bpm;
+
     for (int i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, numberOfSamples);
 
@@ -127,7 +149,8 @@ void SpaceWandererAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
         
 		//outSamples = bDelay.next();
 		// ..do something to the data...
-		Algorithm::distortSignal(inSamples, outSamples, numberOfSamples, PluginControls::getInstance()->getDistortionTresholdValue());
+		    // Now ask the host for the current time so we can store it to be displayed later...
+    updateCurrentTimeInfoFromHost();
     }
 }
 

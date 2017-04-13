@@ -13,7 +13,6 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-#include "Algorithm.h"
 //==============================================================================
 
 class SpaceWandererAudioProcessor  : public AudioProcessor
@@ -55,7 +54,11 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+	AudioPlayHead::CurrentPositionInfo lastPosInfo;
 private:
+	AudioPlayHead* playHead;
+	AudioPlayHead::CurrentPositionInfo currentPositionInfo;
+	void updateCurrentTimeInfoFromHost();
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SpaceWandererAudioProcessor)
 };

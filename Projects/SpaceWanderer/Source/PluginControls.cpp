@@ -12,24 +12,6 @@
 
 PluginControls *PluginControls::instance = 0;
 
-PluginControls::PluginControls()
-{
-	octaverOn = true;
-	n1_octave_level = p1_octave_level = p2_octave_level = 0.5;
-}
-
-void PluginControls::setDistortionTresholdValue(float newValue)
-{
-	distortionTreshold = newValue;
-}
-
-void PluginControls::setValues(float n1_octave_level, float p1_octave_level, float p2_octave_level)
-{
-	this->n1_octave_level = n1_octave_level;
-	this->p1_octave_level = p1_octave_level;
-	this->p2_octave_level = p2_octave_level;
-}
-
 PluginControls* PluginControls::getInstance()
 {
 	if(!instance)
@@ -37,7 +19,38 @@ PluginControls* PluginControls::getInstance()
 	return instance;
 }
 
-float PluginControls::getDistortionTresholdValue()
+PluginControls::PluginControls()
 {
-	return distortionTreshold;
+	delayControls.mix = delayControls.time = delayControls.feedback = 0;
+	delayControls.isOn = true;
+}
+
+void PluginControls::setDelayMix(float value)
+{
+	delayControls.mix = value;
+}
+
+float PluginControls::getDelayMix()
+{
+	return delayControls.mix;
+}
+
+void PluginControls::setDelayTime(float value)
+{
+	delayControls.time = value;
+}
+
+float PluginControls::getDelayTime()
+{
+	return delayControls.time;
+}
+
+void PluginControls::setDelayFeedback(float value)
+{
+	delayControls.feedback = value;
+}
+
+float PluginControls::getDelayFeedback()
+{
+	return delayControls.feedback;
 }

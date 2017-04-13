@@ -18,7 +18,9 @@
 //==============================================================================
 /**
 */
-class SpaceWandererAudioProcessorEditor  : public AudioProcessorEditor, private Slider::Listener
+class SpaceWandererAudioProcessorEditor  : public AudioProcessorEditor,
+											private Slider::Listener,
+											private Timer
 {
 public:
     SpaceWandererAudioProcessorEditor (SpaceWandererAudioProcessor&);
@@ -27,7 +29,7 @@ public:
     //==============================================================================
     void paint (Graphics&) override;
     void resized() override;
-
+	void timerCallback() override;
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
@@ -41,9 +43,10 @@ private:
 	ImageComponent background_img_component;
 	File file;
 
-	Slider distortionKnob;
-	//Label delayTimeLabel, delayMixLabel, delayFeedbackLabel;
-	//Slider delayTimeSlider, delayMixSlider, delayFeedbackSlider;
+	Slider delay_mix_slider, delay_time_slider, delay_feedback_slider;
+	Label delay_mix_label, delay_time_label, delay_feedback_label;
+	Label timecodeDisplayLabel;
+	void updateTimecodeDisplay (AudioPlayHead::CurrentPositionInfo);
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SpaceWandererAudioProcessorEditor)
 };
 

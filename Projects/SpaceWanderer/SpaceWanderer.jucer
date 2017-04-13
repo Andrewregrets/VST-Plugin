@@ -22,8 +22,6 @@
             file="Source/PluginControls.cpp"/>
       <FILE id="B7rovm" name="PluginControls.h" compile="0" resource="0"
             file="Source/PluginControls.h"/>
-      <FILE id="J285Ih" name="Algorithm.cpp" compile="1" resource="0" file="Source/Algorithm.cpp"/>
-      <FILE id="c8NcvL" name="Algorithm.h" compile="0" resource="0" file="Source/Algorithm.h"/>
       <FILE id="QGHfYK" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="KAuwoN" name="PluginProcessor.h" compile="0" resource="0"

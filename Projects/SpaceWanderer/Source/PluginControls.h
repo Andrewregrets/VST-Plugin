@@ -13,6 +13,13 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
+struct DelayControls {
+	float mix;
+	float feedback;
+	float time;
+	bool isOn;
+};
+
 class PluginControls {//inherit from some class to be a listener of knubs
 public:
 	static PluginControls *getInstance();
@@ -21,11 +28,15 @@ public:
 
 	void turnOff() { octaverOn = false; }
 
-	void setValues(float n1_octave_level, float p1_octave_level, float p2_octave_level);
+	//setters
+	void setDelayMix(float value);
+	void setDelayTime(float value);
+	void setDelayFeedback(float value);
 
-	void setDistortionTresholdValue(float newValue);
-
-	float getDistortionTresholdValue();
+	// getters
+	float getDelayMix();
+	float getDelayTime();
+	float getDelayFeedback();
 private:
 	static PluginControls *instance;
 
@@ -38,6 +49,7 @@ private:
 	float n1_octave_level;
 	float p1_octave_level;
 	float p2_octave_level;
+	struct DelayControls delayControls;
 };
 
 #endif  // PLUGINCONTROLS_H_INCLUDED
