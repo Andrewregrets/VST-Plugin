@@ -20,6 +20,7 @@
 */
 class SpaceWandererAudioProcessorEditor  : public AudioProcessorEditor,
 											private Slider::Listener,
+											private Button::Listener,
 											private Timer
 {
 public:
@@ -35,17 +36,21 @@ private:
     // access the processor object that created it.
     SpaceWandererAudioProcessor& processor;
 	
-	void virtual sliderValueChanged(Slider *slider);
-
-
+	virtual void sliderDragEnded(Slider *slider) override; 
+	virtual void sliderValueChanged(Slider *slider) override; //?why do I need this?
+	virtual void buttonClicked (Button* button) override;
 	Slider inputGain;
 	Image background_img;
 	ImageComponent background_img_component;
 	File file;
 
-	Slider delay_mix_slider, delay_time_slider, delay_feedback_slider;
+	Slider delay_mix_slider; 
+	Slider delay_time_slider;
+	Slider delay_feedback_slider;
+
 	Label delay_mix_label, delay_time_label, delay_feedback_label;
 	Label timecodeDisplayLabel;
+	ToggleButton delay_on_b;
 	void updateTimecodeDisplay (AudioPlayHead::CurrentPositionInfo);
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SpaceWandererAudioProcessorEditor)
 };

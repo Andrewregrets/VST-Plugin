@@ -13,10 +13,12 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
+#include "Delay.h"
 //==============================================================================
 
 class SpaceWandererAudioProcessor  : public AudioProcessor
 {
+	friend class SpaceWandererAudioProcessorEditor;
 public:
     //==============================================================================
     SpaceWandererAudioProcessor();
@@ -59,6 +61,9 @@ private:
 	AudioPlayHead* playHead;
 	AudioPlayHead::CurrentPositionInfo currentPositionInfo;
 	void updateCurrentTimeInfoFromHost();
+
+	//effect components
+	Delay delay_effect_l, delay_effect_r;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SpaceWandererAudioProcessor)
 };

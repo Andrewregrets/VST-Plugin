@@ -20,8 +20,9 @@ SpaceWandererAudioProcessorEditor::SpaceWandererAudioProcessorEditor (SpaceWande
 	delay_time_slider(Slider::SliderStyle::Rotary, Slider::TextEntryBoxPosition::TextBoxBelow),
 	delay_feedback_slider(Slider::SliderStyle::Rotary, Slider::TextEntryBoxPosition::TextBoxBelow),
 	delay_mix_label (String(), "Mix:"),
-	delay_time_label (String(), "Delay time, ms:"),
+	delay_time_label (String(), "Delay time:"),
 	delay_feedback_label (String(), "Feedback:"),
+	delay_on_b("Enabled"),
 	file("D:/background")
 {
 	//starts timer for callbacks that update tempo info
@@ -32,28 +33,33 @@ SpaceWandererAudioProcessorEditor::SpaceWandererAudioProcessorEditor (SpaceWande
     timecodeDisplayLabel.setFont (Font (Font::getDefaultMonospacedFontName(), 15.0f, Font::plain));
 
 	// set resize limits for this plug-in
-    setResizeLimits (400, 200, 800, 300);
+    setResizeLimits (400, 300, 800, 600);
 
+	// --- delay components
+	//sliders
 	delay_mix_slider.setRange(0.0, 1.0);//tba remove magic numbers
 	delay_mix_slider.setValue(0.5);
-	delay_feedback_slider.setRange(0.0, 1.1);//tba remove magic numbers
+	delay_feedback_slider.setRange(0.0, 1);//tba remove magic numbers
 	delay_feedback_slider.setValue(0.5);
 	delay_time_slider.setRange(20, 1000);//tba remove magic numbers
-	delay_time_slider.setValue(0.5);
-
+	delay_time_slider.setValue(1000);
+	delay_time_slider.setTextValueSuffix(" ms");
 	addAndMakeVisible(delay_mix_slider);
 	addAndMakeVisible(delay_time_slider);
 	addAndMakeVisible(delay_feedback_slider);
 	delay_mix_label.attachToComponent(&delay_mix_slider, false);
 	delay_time_label.attachToComponent(&delay_time_slider, false);
 	delay_feedback_label.attachToComponent(&delay_feedback_slider, false);
-	//addAndMakeVisible(delay_mix_label);
-	//addAndMakeVisible(delay_time_label);
-	//addAndMakeVisible(delay_feedback_label);
 
+	//togglebuttons
+	delay_on_b.setToggleState(true,true);
+	delay_on_b.setSize(100,30);
+	addAndMakeVisible (delay_on_b);
+	delay_on_b.addListener(this);
 
 	delay_mix_slider.addListener(this);//tba listener - plugincontrols
-
+	delay_time_slider.addListener(this);//tba listener - plugincontrols
+	delay_feedback_slider.addListener(this);//tba listener - plugincontrols
 	addAndMakeVisible (delay_mix_slider);
     setSize (600, 400);
 }
@@ -69,19 +75,24 @@ void SpaceWandererAudioProcessorEditor::paint (Graphics& g)
 
     g.setColour (Colours::black);
     g.setFont (15.0f);
-    g.drawFittedText ("Space Wanderer", 0, 0, getWidth(),30, Justification::centred, 1);
+    //g.drawFittedText ("Space Wanderer", 0, 0, getWidth(),30, Justification::centred, 1);
 }
 
 void SpaceWandererAudioProcessorEditor::resized()
 {
-	Rectangle<int> r (getLocalBounds().reduced (8));
+	Rectangle<int> r(getLocalBounds());
 
-    timecodeDisplayLabel.setBounds (r.removeFromTop (100));
-	Rectangle<int> slider_area (r.removeFromTop (150));
+    timecodeDisplayLabel.setBounds (r.removeFromTop (30));
+	
+	Rectangle<int> delay_area (r.removeFromTop (r.getHeight()/3));
+	Rectangle<int> button_area (delay_area.removeFromTop (delay_on_b.getHeight()));
+	delay_area.removeFromTop(20);
+	Rectangle<int> slider_area (delay_area.removeFromTop (delay_area.getHeight()));
+	delay_on_b.setBounds(button_area.removeFromLeft(80));
+	delay_mix_slider.setBounds (slider_area.removeFromLeft (slider_area.getWidth()/3));
+	delay_time_slider.setBounds (slider_area.removeFromLeft (slider_area.getWidth()/2));
+	delay_feedback_slider.setBounds (slider_area.removeFromLeft (slider_area.getWidth()));
 
-	delay_mix_slider.setBounds (slider_area.removeFromLeft (jmin (180, slider_area.getWidth() / 3)));
-	delay_time_slider.setBounds (slider_area.removeFromLeft (jmin (180, slider_area.getWidth() / 2)));
-	delay_feedback_slider.setBounds (slider_area.removeFromLeft (jmin (180, slider_area.getWidth() / 1)));
 }
 
 //==============================================================================
@@ -141,13 +152,36 @@ void SpaceWandererAudioProcessorEditor::updateTimecodeDisplay (AudioPlayHead::Cu
     timecodeDisplayLabel.setText (displayText.toString(), dontSendNotification);
 }
 
-void SpaceWandererAudioProcessorEditor::sliderValueChanged(Slider *slider)
+void SpaceWandererAudioProcessorEditor::sliderValueChanged(Slider *slider) {} // just need, because compiler thinks the class is abstract
+
+void SpaceWandererAudioProcessorEditor::buttonClicked (Button* button)
+{
+	if(button == &delay_on_b)
+	{
+		processor.delay_effect_l.toggleState();
+		processor.delay_effect_r.toggleState();
+
+	}
+}
+void SpaceWandererAudioProcessorEditor::sliderDragEnded(Slider *slider)	//actual slider event processing
 {
 	if(slider == &delay_mix_slider)
-		PluginControls::getInstance()->setDelayMix(slider->getValue());
+	{
+		processor.delay_effect_l.setMix(slider->getValue());
+		processor.delay_effect_r.setMix(slider->getValue());
+		//PluginControls::getInstance()->setDelayMix(slider->getValue());
+	}
 	else if(slider == &delay_time_slider)
-		PluginControls::getInstance()->setDelayTime(slider->getValue());
+	{
+		processor.delay_effect_l.setTime(slider->getValue(), processor.getSampleRate());
+		processor.delay_effect_r.setTime(slider->getValue(), processor.getSampleRate());
+		//PluginControls::getInstance()->setDelayTime(slider->getValue());
+	}
 	else if(slider == &delay_feedback_slider)
-		PluginControls::getInstance()->setDelayFeedback(slider->getValue());
-	//setValues
+	{
+		processor.delay_effect_l.setFeedback(slider->getValue());
+		processor.delay_effect_r.setFeedback(slider->getValue());
+		//PluginControls::getInstance()->setDelayFeedback(slider->getValue());
+	}
+		//setValues
 }

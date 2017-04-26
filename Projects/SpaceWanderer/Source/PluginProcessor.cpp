@@ -12,7 +12,8 @@ SpaceWandererAudioProcessor::SpaceWandererAudioProcessor()
                       #endif
                        .withOutput ("Output", AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ), delay_effect_l(41000, 0.5f, 0.5f), 
+					   delay_effect_r(41000, 0.5f, 0.5f)//tba remove magic numbers
 #endif
 {
 	lastPosInfo.resetToDefault();
@@ -139,19 +140,19 @@ void SpaceWandererAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
 	playHead->getCurrentPosition(currentPositionInfo);
 	currentPositionInfo.bpm;
 
-    for (int i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-        buffer.clear (i, 0, numberOfSamples);
+    //for (int i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
+    //    buffer.clear (i, 0, numberOfSamples);
 
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        float* outSamples = buffer.getWritePointer (channel);
-		const float* inSamples = buffer.getReadPointer(channel);
-        
-		//outSamples = bDelay.next();
-		// ..do something to the data...
-		    // Now ask the host for the current time so we can store it to be displayed later...
+	float* outSamples_l = buffer.getWritePointer (0);
+	const float* inSamples_l = buffer.getReadPointer(0);
+	float* outSamples_r = buffer.getWritePointer (1);
+	const float* inSamples_r = buffer.getReadPointer(1);
+
+	delay_effect_l.getProcessedSignal(inSamples_l, outSamples_l, numberOfSamples);
+	delay_effect_r.getProcessedSignal(inSamples_r, outSamples_r, numberOfSamples);
+		//// ..do something to the data...
+		// Now ask the host for the current time so we can store it to be displayed later...
     updateCurrentTimeInfoFromHost();
-    }
 }
 
 //==============================================================================

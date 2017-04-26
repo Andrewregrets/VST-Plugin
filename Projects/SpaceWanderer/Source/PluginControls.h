@@ -17,7 +17,9 @@ struct DelayControls {
 	float mix;
 	float feedback;
 	float time;
-	bool isOn;
+	bool enabled;
+	bool synched;
+	bool reversed;
 };
 
 class PluginControls {//inherit from some class to be a listener of knubs
@@ -32,6 +34,8 @@ public:
 	void setDelayMix(float value);
 	void setDelayTime(float value);
 	void setDelayFeedback(float value);
+	bool isSynched();
+	bool isReverse();
 
 	// getters
 	float getDelayMix();

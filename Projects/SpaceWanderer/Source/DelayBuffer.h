@@ -15,13 +15,19 @@
 
 class DelayBuffer {
 public:
-	DelayBuffer(int size);
+	DelayBuffer(int length_value);
 	~DelayBuffer();
-	float ReadAndWrite(float value_to_write);
+	void setLength(int length_value);
+	float readAndWrite(float value_to_write);
+	float read();
+	void write(float value_to_write);
+	void next();
+	void clear();
 private:
 	int length;
 	float* buffer;
-	int position;
+	int position_to_read;
+	int position_to_write;
 };
 
 

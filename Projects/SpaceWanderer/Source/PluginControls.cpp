@@ -22,7 +22,9 @@ PluginControls* PluginControls::getInstance()
 PluginControls::PluginControls()
 {
 	delayControls.mix = delayControls.time = delayControls.feedback = 0;
-	delayControls.isOn = true;
+	delayControls.enabled = true;
+	delayControls.reversed = false;
+	delayControls.synched = false;
 }
 
 void PluginControls::setDelayMix(float value)

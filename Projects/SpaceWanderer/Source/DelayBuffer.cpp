@@ -10,11 +10,12 @@
 
 #include "DelayBuffer.h"
 
-DelayBuffer::DelayBuffer(int size)
+DelayBuffer::DelayBuffer(int length)
 {
-	length = size;
-	buffer = new float[size];
-	position = 0;
+	this->length = length;
+	buffer = new float[this->length];
+	position_to_read = 0;
+	position_to_write = 0;
 	std::fill(buffer, buffer + length, 0);
 }
 
@@ -23,13 +24,37 @@ DelayBuffer::~DelayBuffer()
 	delete[] buffer;
 }
 
-float DelayBuffer::ReadAndWrite(float value_to_write)
+void DelayBuffer::setLength(int length_value)
 {
-	float read_value = buffer[position];
-	buffer[position] = value_to_write;
-	++position;
+	delete[] buffer;
+	length = length_value;
+	buffer = new float[length];
+	clear();
+	position_to_read = 0;
+	position_to_write = 0;
+}
 
-	if(position >= length)
-		position = 0;
-	return read_value;
+float DelayBuffer::read()
+{	
+	return buffer[position_to_read];
+}
+
+void DelayBuffer::write(float value_to_write)
+{
+	buffer[position_to_write] = value_to_write;
+}
+
+void DelayBuffer::next()
+{
+	++position_to_write;
+	if(position_to_write >= length)
+		position_to_write = 0;
+	++position_to_read;
+	if(position_to_read >= length)
+		position_to_read = 0;
+}
+
+void DelayBuffer::clear()
+{
+	std::fill(buffer, buffer + length, 0);
 }
