@@ -324,7 +324,7 @@ void DelayAudioProcessorEditor::sliderValueChanged (Slider* sliderThatWasMoved)
     }
     else if (sliderThatWasMoved == DelayKnob)
     {
-        processor.setParameterNotifyingHost(DelayAudioProcessor::Delay, (float)DelayKnob->getValue());
+        processor.setParameterNotifyingHost(DelayAudioProcessor::Time, (float)DelayKnob->getValue());
     }
 }
 
@@ -372,7 +372,7 @@ void DelayAudioProcessorEditor::timerCallback(){
 		DottedButton->setToggleState(1.0f == processor.getParameter(DelayAudioProcessor::Dot), juce::dontSendNotification);
 		DoubleDottedButton->setToggleState(1.0f == processor.getParameter(DelayAudioProcessor::SecondDot), juce::dontSendNotification);
 
-		DelayKnob->setValue(processor.getParameter(DelayAudioProcessor::Delay), juce::dontSendNotification);
+		DelayKnob->setValue(processor.getParameter(DelayAudioProcessor::Time), juce::dontSendNotification);
         FeedbackKnob->setValue(processor.getParameter(DelayAudioProcessor::Feedback), juce::dontSendNotification);
         MixKnob->setValue(processor.getParameter(DelayAudioProcessor::Mix), juce::dontSendNotification);
         processor.ClearUIUpdateFlag();

@@ -2,7 +2,7 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-DelayAudioProcessor::DelayAudioProcessor()
+ShimmerAudioProcessor::ShimmerAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
      : AudioProcessor (BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
@@ -13,33 +13,38 @@ DelayAudioProcessor::DelayAudioProcessor()
                      #endif
                        ),
 #endif
-					   bDelay_Left(2000.0f), bDelay_Right(2000.0f)
+					   delay_Left(2000.0f), delay_Right(2000.0f)
 {
 	//default values for plugin parameters
-    UserParams[MasterBypass] = 0.0f;
-    UserParams[Time] = 1000.0f;
-    UserParams[Feedback] = 10.0f;
-    UserParams[Mix] = 60.0f;
-	UserParams[Synch] = 0.0f;
-	UserParams[Dot] = 0.0f;
-	UserParams[SecondDot] = 0.0f;
+    UserParams[DelayBypass] = 0.0f;
+    UserParams[DelayTime] = 1000.0f;
+    UserParams[DelayFeedback] = 10.0f;
+    UserParams[DelayMix] = 60.0f;
+	UserParams[DelaySynch] = 0.0f;
+	UserParams[DelayDot] = 0.0f;
+	UserParams[DelaySecondDot] = 0.0f;
+
+	UserParams[ReverbBypass] = 0.0f;
+    UserParams[ReverbMix] = 0.5f;
+    UserParams[ReverbDecay] = 3.0f;
+
     //UserParams[Tap1Delay] = 0;
     UIUpdateFlag = true;
     //default host BPM to 120, default in most DAWs
     hostBPM = 120;
 }
 
-DelayAudioProcessor::~DelayAudioProcessor()
+ShimmerAudioProcessor::~ShimmerAudioProcessor()
 {
 }
 
 //==============================================================================
-const String DelayAudioProcessor::getName() const
+const String ShimmerAudioProcessor::getName() const
 {
     return JucePlugin_Name;
 }
 
-bool DelayAudioProcessor::acceptsMidi() const
+bool ShimmerAudioProcessor::acceptsMidi() const
 {
    #if JucePlugin_WantsMidiInput
     return true;
@@ -48,7 +53,7 @@ bool DelayAudioProcessor::acceptsMidi() const
    #endif
 }
 
-bool DelayAudioProcessor::producesMidi() const
+bool ShimmerAudioProcessor::producesMidi() const
 {
    #if JucePlugin_ProducesMidiOutput
     return true;
@@ -57,32 +62,33 @@ bool DelayAudioProcessor::producesMidi() const
    #endif
 }
 
-double DelayAudioProcessor::getTailLengthSeconds() const
+double ShimmerAudioProcessor::getTailLengthSeconds() const
 {
     return 0.0;
 }
-float DelayAudioProcessor::getParameter (int index)
-{
-    //return the value of the parameter based on which indexed parameter is selected
-    switch (index) {
-        case MasterBypass:
-            return UserParams[MasterBypass];
-        case Time:
-            return UserParams[Time];            
-        case Feedback:
-            return UserParams[Feedback];
-        case Mix:
-            return UserParams[Mix];
-        case Synch:
-            return UserParams[Synch];
-		case Dot:
-            return UserParams[Dot];     
-		case SecondDot:
-            return UserParams[SecondDot];     
-        default:
-            return 0.0f;
-    }
-}
+
+//float ShimmerAudioProcessor::getParameter (int index)
+//{
+//    //return the value of the parameter based on which indexed parameter is selected
+//    switch (index) {
+//        case MasterBypass:
+//            return UserParams[MasterBypass];
+//        case Time:
+//            return UserParams[Time];            
+//        case Feedback:
+//            return UserParams[Feedback];
+//        case Mix:
+//            return UserParams[Mix];
+//        case Synch:
+//            return UserParams[Synch];
+//		case Dot:
+//            return UserParams[Dot];     
+//		case SecondDot:
+//            return UserParams[SecondDot];     
+//        default:
+//            return 0.0f;
+//    }
+//}
 
 template <class T>
 void swap(T& a, T& b)
@@ -93,91 +99,102 @@ void swap(T& a, T& b)
 	b = temp;
 }
 
-float DelayAudioProcessor::getDelayParam()
+float ShimmerAudioProcessor::getDelayParam()
 {
-	return UserParams[Time];
+	return UserParams[DelayTime];
 }
 
-void DelayAudioProcessor::setParameter (int index, float newValue)
+void ShimmerAudioProcessor::setParameter (int index, float newValue)
 {
     //set the parameter in the UI when user interacts and pass this
     //value back through to the underlying Delay classes left and right
 	static float old_delay = 0.0f;
     switch (index) {
-        case MasterBypass:
-            UserParams[MasterBypass] = newValue;
-            bDelay_Left.setByPass((bool)UserParams[MasterBypass]);
-            bDelay_Right.setByPass((bool)UserParams[MasterBypass]);
+        case DelayBypass:
+            UserParams[DelayBypass] = newValue;
+            delay_Left.setByPass((bool)UserParams[DelayBypass]);
+            delay_Right.setByPass((bool)UserParams[DelayBypass]);
             break;
-        case Time:
-            UserParams[Time] = newValue;
-			if(UserParams[Synch] == 1.0f)
+        case DelayTime:
+            UserParams[DelayTime] = newValue;
+			if(UserParams[DelaySynch] == 1.0f)
 			{
-				bDelay_Left.setDelay(calculateDelayTap());
-				bDelay_Right.setDelay(calculateDelayTap());
+				delay_Left.setDelay(calculateDelayTap());
+				delay_Right.setDelay(calculateDelayTap());
 			}
 			else
 			{
-				bDelay_Left.setDelay(UserParams[Time]);
-				bDelay_Right.setDelay(UserParams[Time]);
+				delay_Left.setDelay(UserParams[DelayTime]);
+				delay_Right.setDelay(UserParams[DelayTime]);
 			}
             break;            
-        case Feedback:
-            UserParams[Feedback] = newValue;
+        case DelayFeedback:
+            UserParams[DelayFeedback] = newValue;
             //Feedback is received in 0 to +100
-            bDelay_Left.setFeedback(UserParams[Feedback]);
-            bDelay_Right.setFeedback(UserParams[Feedback]);
+            delay_Left.setFeedback(UserParams[DelayFeedback]);
+            delay_Right.setFeedback(UserParams[DelayFeedback]);
             break;
-        case Mix:
-            UserParams[Mix] = newValue;
-            bDelay_Left.setMix(UserParams[Mix]);
-            bDelay_Right.setMix(UserParams[Mix]);
+        case DelayMix:
+            UserParams[DelayMix] = newValue;
+            delay_Left.setMix(UserParams[DelayMix]);
+            delay_Right.setMix(UserParams[DelayMix]);
             break;
-		case Synch://???
-			swap(UserParams[Time], old_delay);
-			if(UserParams[Synch] = newValue > 0)
+		case DelaySynch://???
+			swap(UserParams[DelayTime], old_delay);
+			if(UserParams[DelaySynch] = newValue > 0)
 			{
-				bDelay_Left.setDelay(calculateDelayTap());
-				bDelay_Right.setDelay(calculateDelayTap());
+				delay_Left.setDelay(calculateDelayTap());
+				delay_Right.setDelay(calculateDelayTap());
 			}
 			else
 			{
-				bDelay_Left.setDelay(UserParams[Time]);
-				bDelay_Right.setDelay(UserParams[Time]);
+				delay_Left.setDelay(UserParams[DelayTime]);
+				delay_Right.setDelay(UserParams[DelayTime]);
 			}
 			break;
-		case Dot:
-			UserParams[Dot] = newValue;
-			bDelay_Left.setDelay(calculateDelayTap());
-            bDelay_Right.setDelay(calculateDelayTap());
+		case DelayDot:
+			UserParams[DelayDot] = newValue;
+			delay_Left.setDelay(calculateDelayTap());
+            delay_Right.setDelay(calculateDelayTap());
 			break;
-		case SecondDot:
-			UserParams[SecondDot] = newValue;
-			bDelay_Left.setDelay(calculateDelayTap());
-            bDelay_Right.setDelay(calculateDelayTap());
+		case DelaySecondDot:
+			UserParams[DelaySecondDot] = newValue;
+			delay_Left.setDelay(calculateDelayTap());
+            delay_Right.setDelay(calculateDelayTap());
 			break;
+		case ReverbBypass:
+            UserParams[ReverbBypass] = newValue;
+            reverb.setBypass((bool)UserParams[ReverbBypass]);
+            break;
+        case ReverbMix:
+            UserParams[ReverbMix] = newValue;
+            break;
+        case ReverbDecay:
+            UserParams[ReverbDecay] = newValue;
+            reverb.setDecayFactor(UserParams[ReverbDecay]);
+            break;
         default:
             break;
     }
 }
 
-const String DelayAudioProcessor::getParameterName (int index)
-{
-    switch (index) {
-        case MasterBypass:
-            return "MasterBypass";
-        case Time:
-            return "Delay";            
-        case Feedback:
-            return "Feedback";
-        case Mix:
-            return "Mix";   
-        default:
-            return String::empty;
-    }
-}
+//const String ShimmerAudioProcessor::getParameterName (int index)
+//{
+//    switch (index) {
+//        case MasterBypass:
+//            return "MasterBypass";
+//        case Time:
+//            return "Delay";            
+//        case Feedback:
+//            return "Feedback";
+//        case Mix:
+//            return "Mix";   
+//        default:
+//            return String::empty;
+//    }
+//}
 
-const String DelayAudioProcessor::getParameterText (int index)
+const String ShimmerAudioProcessor::getParameterText (int index)
 {
     if(index >= 0 && index < NumParams){
         return String(UserParams[index]);
@@ -186,76 +203,76 @@ const String DelayAudioProcessor::getParameterText (int index)
         return String::empty;
     }
 }
-const String DelayAudioProcessor::getInputChannelName (int channelIndex) const
+const String ShimmerAudioProcessor::getInputChannelName (int channelIndex) const
 {
     return String (channelIndex + 1);
 }
 
-const String DelayAudioProcessor::getOutputChannelName (int channelIndex) const
+const String ShimmerAudioProcessor::getOutputChannelName (int channelIndex) const
 {
     return String (channelIndex + 1);
 }
 
-bool DelayAudioProcessor::isInputChannelStereoPair (int index) const
+bool ShimmerAudioProcessor::isInputChannelStereoPair (int index) const
 {
     return true;
 }
 
-bool DelayAudioProcessor::isOutputChannelStereoPair (int index) const
+bool ShimmerAudioProcessor::isOutputChannelStereoPair (int index) const
 {
     return true;
 }
 
-bool DelayAudioProcessor::silenceInProducesSilenceOut() const
+bool ShimmerAudioProcessor::silenceInProducesSilenceOut() const
 {
     return false;
 }
 
-int DelayAudioProcessor::getNumParameters()
+int ShimmerAudioProcessor::getNumParameters()
 {
     return NumParams;
 }
 
 //-----------------------------------------
-int DelayAudioProcessor::getNumPrograms()
+int ShimmerAudioProcessor::getNumPrograms()
 {
     return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
                 // so this should be at least 1, even if you're not really implementing programs.
 }
 
-int DelayAudioProcessor::getCurrentProgram()
+int ShimmerAudioProcessor::getCurrentProgram()
 {
     return 0;
 }
 
-void DelayAudioProcessor::setCurrentProgram (int index)
+void ShimmerAudioProcessor::setCurrentProgram (int index)
 {
 }
 
-const String DelayAudioProcessor::getProgramName (int index)
+const String ShimmerAudioProcessor::getProgramName (int index)
 {
     return String();
 }
 
-void DelayAudioProcessor::changeProgramName (int index, const String& newName)
+void ShimmerAudioProcessor::changeProgramName (int index, const String& newName)
 {
 }
 
 //==============================================================================
-void DelayAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void ShimmerAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
 }
 
-void DelayAudioProcessor::releaseResources()
+void ShimmerAudioProcessor::releaseResources()
 {
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
-bool DelayAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
+bool ShimmerAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
   #if JucePlugin_IsMidiEffect
     ignoreUnused (layouts);
@@ -281,7 +298,7 @@ bool DelayAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) co
 //processing
 //  The I/O buffers are interleaved depending on the number of channels. If NumChannels = 2, then the
 //	buffer is L/R/L/R/L/R etc...
-void DelayAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
+void ShimmerAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
     //get the host BPM and sync playhead to it
     juce::AudioPlayHead::CurrentPositionInfo result;
@@ -296,12 +313,16 @@ void DelayAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
     float* channelDataLeft = buffer.getWritePointer(0);  //buffer.getSampleData(0);
     float* channelDataRight = buffer.getWritePointer(1); 
 
+	float out_l = 0.0f, out_r = 0.0f;
     for(int i = 0; i < numSamples; i+=2)
 	{
         float in_l = channelDataLeft[i], in_r = channelDataRight[i+1];
                  
-        channelDataLeft[i] = bDelay_Left.next(in_l);                
-        channelDataRight[i+1] = bDelay_Right.next(in_l); 
+        out_l = delay_Left.next(in_l);                
+        //out_r = delay_Right.next(in_l); 
+        
+		channelDataLeft[i] = UserParams[ReverbMix] * reverb.next(out_l) + (1.0f - UserParams[ReverbMix]) * out_l;
+        channelDataRight[i+1] = UserParams[ReverbMix] * reverb.next(out_l) + (1.0f - UserParams[ReverbMix]) * out_l;
         ////MONO-IN, Stereo Out
         //if(getNumInputChannels() == 1 && getNumOutputChannels() == 2){
         //    channelDataRight[i+1] = channelDataLeft[i]; //copy mono
@@ -326,7 +347,7 @@ void DelayAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
 }
 
 
-void DelayAudioProcessor::processBlockBypassed (AudioSampleBuffer& buffer, MidiBuffer& midiMessages){
+void ShimmerAudioProcessor::processBlockBypassed (AudioSampleBuffer& buffer, MidiBuffer& midiMessages){
     int numSamples = buffer.getNumSamples(); //THIS IS NUM SAMPLES PER CHANNEL
 
     for(int channel = 0; channel < getNumInputChannels(); channel++){
@@ -340,18 +361,18 @@ void DelayAudioProcessor::processBlockBypassed (AudioSampleBuffer& buffer, MidiB
 }
 
 //==============================================================================
-bool DelayAudioProcessor::hasEditor() const
+bool ShimmerAudioProcessor::hasEditor() const
 {
     return true; // (change this to false if you choose to not supply an editor)
 }
 
-AudioProcessorEditor* DelayAudioProcessor::createEditor()
+AudioProcessorEditor* ShimmerAudioProcessor::createEditor()
 {
-    return new DelayAudioProcessorEditor (*this);
+    return new ShimmerAudioProcessorEditor (*this);
 }
 
 //==============================================================================
-void DelayAudioProcessor::getStateInformation (MemoryBlock& destData)//???
+void ShimmerAudioProcessor::getStateInformation (MemoryBlock& destData)//???
 {
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
@@ -379,7 +400,7 @@ void DelayAudioProcessor::getStateInformation (MemoryBlock& destData)//???
  //   copyXmlToBinary(root, destData);
 }
 
-void DelayAudioProcessor::setStateInformation (const void* data, int sizeInBytes)//???
+void ShimmerAudioProcessor::setStateInformation (const void* data, int sizeInBytes)//???
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
@@ -439,16 +460,16 @@ void DelayAudioProcessor::setStateInformation (const void* data, int sizeInBytes
 // 4 = 1/16 note
 // then sends the result back
 //-------------------------------------------------------------------------
-float DelayAudioProcessor::calculateDelayTap()
+float ShimmerAudioProcessor::calculateDelayTap()
 {
     float result = .0f;
 	float temp = .0f;
-	int tap = static_cast<int>(UserParams[Time]);//!!!
+	int tap = static_cast<int>(UserParams[DelayTime]);//!!!
 	result = temp = 60*4*1000/(hostBPM*(tap+1));
 
-	if(UserParams[Dot])
+	if(UserParams[DelayDot])
 		result += temp/2;
-	if(UserParams[SecondDot])
+	if(UserParams[DelaySecondDot])
 		result += temp/4;
     return result;
 }
@@ -457,5 +478,5 @@ float DelayAudioProcessor::calculateDelayTap()
 // This creates new instances of the plugin..
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new DelayAudioProcessor();
+    return new ShimmerAudioProcessor();
 }

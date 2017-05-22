@@ -2,17 +2,18 @@
 #define PLUGINPROCESSOR_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "Delay.h"
+#include "./Delay/Delay.h"
+#include "./Reverb/Reverb.h"
 
 //==============================================================================
 /**
 */
-class DelayAudioProcessor  : public AudioProcessor
+class ShimmerAudioProcessor  : public AudioProcessor
 {
 public:
     //==============================================================================
-    DelayAudioProcessor();
-    ~DelayAudioProcessor();
+    ShimmerAudioProcessor();
+    ~ShimmerAudioProcessor();
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -50,10 +51,10 @@ public:
 	//Custom Methods, Params, and Public Data
 	 int getNumParameters();
 
-    float getParameter (int index);
+    //float getParameter (int index);
     void setParameter (int index, float newValue);
 
-    const String getParameterName (int index);
+    //const String getParameterName (int index);
     const String getParameterText (int index);
 
     const String getInputChannelName (int channelIndex) const;
@@ -61,13 +62,16 @@ public:
     bool isInputChannelStereoPair (int index) const;
     bool isOutputChannelStereoPair (int index) const;
     enum Parameters{
-        MasterBypass = 0,
-        Time,
-        Feedback,
-        Mix,
-		Synch,
-		Dot,
-		SecondDot,
+        DelayBypass = 0,
+        DelayTime,
+        DelayFeedback,
+        DelayMix,
+		DelaySynch,
+		DelayDot,
+		DelaySecondDot,
+		ReverbBypass,
+        ReverbMix,
+        ReverbDecay,
         NumParams
     };
     bool NeedsUIUpdate(){return UIUpdateFlag;};
@@ -82,13 +86,14 @@ private:
 
     double hostBPM;
     
-    Delay bDelay_Left;
-    Delay bDelay_Right;
+    Delay delay_Left;
+    Delay delay_Right;
 
-    
+	SReverb reverb;
+
     bool UIUpdateFlag;
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DelayAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ShimmerAudioProcessor)
 };
 
 

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="aeWPoY" name="Shimmer" projectType="audioplug" version="1.0.0"
+              bundleIdentifier="com.SW.Shimmer" includeBinaryInAppConfig="1"
+              buildVST="1" buildVST3="0" buildAU="1" buildAUv3="0" buildRTAS="0"
+              buildAAX="0" pluginName="Shimmer" pluginDesc="Shimmer" pluginManufacturer="SW"
+              pluginManufacturerCode="Manu" pluginCode="Aewp" pluginChannelConfigs=""
+              pluginIsSynth="0" pluginWantsMidiIn="0" pluginProducesMidiOut="0"
+              pluginIsMidiEffectPlugin="0" pluginEditorRequiresKeys="0" pluginAUExportPrefix="ShimmerAU"
+              pluginRTASCategory="" aaxIdentifier="com.SW.Shimmer" pluginAAXCategory="AAX_ePlugInCategory_Dynamics"
+              jucerVersion="4.3.1" companyName="SW">
+  <MAINGROUP id="H3SQew" name="Shimmer">
+    <GROUP id="{7AB3FC4D-255D-6F1A-C94C-D23E2C27CE70}" name="Source">
+      <GROUP id="{DAA04F94-4F0E-E120-722B-3894B026FBD8}" name="Images">
+        <FILE id="EZw3AJ" name="Images.cpp" compile="1" resource="0" file="Source/Images/Images.cpp"/>
+        <FILE id="svR1GT" name="Images.h" compile="0" resource="0" file="Source/Images/Images.h"/>
+      </GROUP>
+      <GROUP id="{152C3681-B72A-6167-5DC7-2EB949451649}" name="Reverb">
+        <FILE id="UoxNbs" name="Reverb.cpp" compile="1" resource="0" file="Source/Reverb/Reverb.cpp"/>
+        <FILE id="njiIWW" name="Reverb.h" compile="0" resource="0" file="Source/Reverb/Reverb.h"/>
+      </GROUP>
+      <GROUP id="{36B95CCD-3A09-BEC3-6AD4-29E8440B855E}" name="Filters">
+        <GROUP id="{C285C500-9E1B-259A-4199-E07EA5EB14BC}" name="Comb">
+          <FILE id="x0sbO4" name="Comb.cpp" compile="1" resource="0" file="Source/Filters/Comb/Comb.cpp"/>
+          <FILE id="n9j6Ge" name="Comb.h" compile="0" resource="0" file="Source/Filters/Comb/Comb.h"/>
+        </GROUP>
+        <GROUP id="{1E2A815F-E272-0A6D-CDF3-7786F5FC849D}" name="LowPass">
+          <FILE id="bDKvaN" name="LowPass.cpp" compile="1" resource="0" file="Source/Filters/LowPass/LowPass.cpp"/>
+          <FILE id="NIyKPX" name="LowPass.h" compile="0" resource="0" file="Source/Filters/LowPass/LowPass.h"/>
+        </GROUP>
+        <GROUP id="{B2DB8F23-0FD2-99B6-D151-F2BBEBB6E0EE}" name="AllPass">
+          <FILE id="sP1fyX" name="AllPass.cpp" compile="1" resource="0" file="Source/Filters/AllPass/AllPass.cpp"/>
+          <FILE id="VCS48D" name="AllPass.h" compile="0" resource="0" file="Source/Filters/AllPass/AllPass.h"/>
+        </GROUP>
+      </GROUP>
+      <GROUP id="{7D4BF8CF-7E94-8E9D-2554-765BC0CE385A}" name="DelayLine">
+        <FILE id="JN2EDL" name="DelayLine.cpp" compile="1" resource="0" file="Source/DelayLine/DelayLine.cpp"/>
+        <FILE id="CYmJLV" name="DelayLine.h" compile="0" resource="0" file="Source/DelayLine/DelayLine.h"/>
+      </GROUP>
+      <GROUP id="{ED65CA70-9CFA-20CE-6A78-A268437007E6}" name="Delay">
+        <FILE id="nwzgAW" name="Delay.cpp" compile="1" resource="0" file="Source/Delay/Delay.cpp"/>
+        <FILE id="KfzvyA" name="Delay.h" compile="0" resource="0" file="Source/Delay/Delay.h"/>
+      </GROUP>
+      <FILE id="xky8xl" name="PluginProcessor.cpp" compile="1" resource="0"
+            file="Source/PluginProcessor.cpp"/>
+      <FILE id="PBkrfH" name="PluginProcessor.h" compile="0" resource="0"
+            file="Source/PluginProcessor.h"/>
+      <FILE id="CymaEb" name="PluginEditor.cpp" compile="1" resource="0"
+            file="Source/PluginEditor.cpp"/>
+      <FILE id="r88UAd" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+    </GROUP>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <VS2012 targetFolder="Builds/VisualStudio2012" toolset="">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="1" optimisation="1" targetName="Shimmer"/>
+        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
+                       isDebug="0" optimisation="3" targetName="Shimmer" useRuntimeLibDLL="0"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../../../Programs/Programming/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../../Programs/Programming/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../../Programs/Programming/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../../Programs/Programming/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../../Programs/Programming/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../../Programs/Programming/JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../../../Programs/Programming/JUCE/modules"/>
+        <MODULEPATH id="juce_video" path="../../../Programs/Programming/JUCE/modules"/>
+        <MODULEPATH id="juce_opengl" path="../../../Programs/Programming/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../../../Programs/Programming/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../../Programs/Programming/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../../Programs/Programming/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../../Programs/Programming/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../../Programs/Programming/JUCE/modules"/>
+      </MODULEPATHS>
+    </VS2012>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_cryptography" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_opengl" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_video" showAllCode="1" useLocalCopy="0"/>
+  </MODULES>
+  <JUCEOPTIONS JUCE_QUICKTIME="disabled"/>
+  <LIVE_SETTINGS>
+    <WINDOWS/>
+  </LIVE_SETTINGS>
+</JUCERPROJECT>

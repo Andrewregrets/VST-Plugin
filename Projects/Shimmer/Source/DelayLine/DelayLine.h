@@ -27,12 +27,12 @@ public:
     float readDelay();
     void writeDelay(float in);
     float next(const float in);
-    void resetBuffer();
-    void resetDelay();
+    void resetDelayLine();
+	void clearBuffer();
 
 private:
 	int sample_rate;
-    int writePos, readPosA, MAX_DELAY_SAMPLES;
+    int writePos, readPos, MAX_DELAY_SAMPLES;
     float delay_ms, delay_samples, fraction, MAX_DELAY_MS;
     float *buffer;
 };

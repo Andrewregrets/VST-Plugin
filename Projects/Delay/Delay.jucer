@@ -11,6 +11,8 @@
               jucerVersion="4.3.1">
   <MAINGROUP id="Bmz637" name="Delay">
     <GROUP id="{4A72D777-475C-1A35-13C6-77552CF446C0}" name="Source">
+      <FILE id="gEJA93" name="Delay.cpp" compile="1" resource="0" file="Source/Delay.cpp"/>
+      <FILE id="TcbZZM" name="Delay.h" compile="0" resource="0" file="Source/Delay.h"/>
       <FILE id="sq0Vk9" name="Images.cpp" compile="1" resource="0" file="Source/Images.cpp"/>
       <FILE id="YsVoaC" name="Images.h" compile="0" resource="0" file="Source/Images.h"/>
       <FILE id="M008tU" name="DelayLine.cpp" compile="1" resource="0" file="Source/DelayLine.cpp"/>
