@@ -34,7 +34,7 @@ inline float linInterp(float x1, float x2, float y1, float y2, float x){
 
 //constructor
 DelayLine::DelayLine(float d_ms_max, int sr, float d_ms){
-    //assert(d_ms <= d_ms_max);//check bound on delay time
+    assert(d_ms <= d_ms_max);//check bound on delay time
     
 	sample_rate = sr;
     buffer = NULL;
@@ -77,7 +77,7 @@ void DelayLine::setDelayTimeMS(float time_ms){
     readPos = writePos - (int)delay_samples;
     
     if(readPos < 0)
-        readPos += MAX_DELAY_SAMPLES;       
+        readPos += MAX_DELAY_SAMPLES;   
 }
 
 void DelayLine::setDelay(float d){

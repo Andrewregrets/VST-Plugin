@@ -22,7 +22,7 @@ void Allpass::setDelayTimeMS(float time_ms){return delay->setDelayTimeMS(time_ms
 float Allpass::next(const float in){
     float dL = delay->readDelay();
     float fW = in + (gain*dL);
-    float out = -gain*fW + dL;
     delay->writeDelay(fW);
+	float out = -gain*fW + dL;
     return out;
 }

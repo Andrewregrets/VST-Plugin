@@ -17,13 +17,14 @@ inline float calcAPGain(const float d_ms, const float rt60){
 //constructor / destructor
 SReverb::SReverb(const int sr, const float rt60,
           const float cDelay1, const float cDelay2, const float cDelay3, const float cDelay4,
-          const float aDelay1, const float aDelay2, const float aGain1, const float aGain2, const float lCutoff1){   //const float lCutoff1
+          const float aDelay1, const float aDelay2, const float aGain1, const float aGain2, const float lCutoff1, const float mx){   //const float lCutoff1
     ALLPASS_GAIN_LIMIT = 0.107f;	//0.707f;
     decayFactor = rt60;
     float d_ms, d_ms_max = 100.0f, gain;
     d_ms = cDelay1;
     bypass = false;
-    
+    mix = mx;
+
     gain = calcCombGain(d_ms, decayFactor);
     combs[0] = new Comb(sr, d_ms, d_ms_max, gain);
     setCombDelay(0,sr,d_ms);
@@ -61,6 +62,7 @@ SReverb::~SReverb(){
 }
 
 //getters
+float SReverb::getMix() {return mix;}
 float SReverb::getDecayFactor(){return decayFactor;}
 float SReverb::getCombDelay(const int id){return combs[id]->getDelayTimeMS();}
 float SReverb::getAllpassDelay(const int id){return allpasses[id]->getDelayTimeMS();}
@@ -108,9 +110,11 @@ float SReverb::next(const float in){
     //out = allpasses[1]->next((1.0f - allpasses[1]->getGain()) * allpasses[0]->next((1.0f - allpasses[0]->getGain()) * out));//still working out best way to avoid clipping
     
     //KH***return lowpasses[0]->next(passOut2 * NUM_COMBS); //scale back up (not all the way) at output
-    return passOut2 * NUM_COMBS; 
+    return 	mix * passOut2 * NUM_COMBS + (1.0f - mix) * in;
     //return passOut2;
-    
 }
 
-
+void SReverb::setMix(float value)
+{
+	mix = value;
+}

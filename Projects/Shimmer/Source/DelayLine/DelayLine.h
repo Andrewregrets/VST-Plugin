@@ -1,11 +1,14 @@
+//#define NDEBUG // в начале файла исходного кода, перед включением заголовочного файла <cassert>
+
 #ifndef DelayLine_H_INCLUDED
 #define DelayLine_H_INCLUDED
 
 #include <algorithm>
 #include <cmath>
-#include <cassert>
+
 #include <cstdlib>
 #include <iostream>
+#include <cassert>
 
 class DelayLine{
 

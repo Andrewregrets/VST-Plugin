@@ -51,7 +51,7 @@ public:
 	//Custom Methods, Params, and Public Data
 	 int getNumParameters();
 
-    //float getParameter (int index);
+    float getParameter (int index);
     void setParameter (int index, float newValue);
 
     //const String getParameterName (int index);
@@ -72,22 +72,25 @@ public:
 		ReverbBypass,
         ReverbMix,
         ReverbDecay,
+		InputGain,
+		OutputGain,
         NumParams
     };
     bool NeedsUIUpdate(){return UIUpdateFlag;};
     void ClearUIUpdateFlag(){UIUpdateFlag = false;};
     void RaiseUIUpdateFlag(){UIUpdateFlag = true;};
     //function added to calculate delay tap note values
-    float calculateDelayTap();
+    float calculateDelayTap(float tap);
 	float getDelayParam();
+	AudioPlayHead::CurrentPositionInfo lastPosInfo;
 private:
+	void updateCurrentTimeInfoFromHost();
 
     float UserParams[NumParams];
 
     double hostBPM;
     
-    Delay delay_Left;
-    Delay delay_Right;
+    Delay delay;
 
 	SReverb reverb;
 

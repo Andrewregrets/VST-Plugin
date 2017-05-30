@@ -13,23 +13,25 @@ ShimmerAudioProcessor::ShimmerAudioProcessor()
                      #endif
                        ),
 #endif
-					   delay_Left(2000.0f), delay_Right(2000.0f)
+					   delay(3500.0f)
 {
 	//default values for plugin parameters
-    UserParams[DelayBypass] = 0.0f;
-    UserParams[DelayTime] = 1000.0f;
-    UserParams[DelayFeedback] = 10.0f;
-    UserParams[DelayMix] = 60.0f;
+	lastPosInfo.resetToDefault();
+    UserParams[DelayBypass] = delay.getByPass();
+    UserParams[DelayTime] = delay.getDelayTimeMS();
+    UserParams[DelayFeedback] = delay.getFeedback();
+	UserParams[DelayMix] = delay.getMix();
 	UserParams[DelaySynch] = 0.0f;
 	UserParams[DelayDot] = 0.0f;
 	UserParams[DelaySecondDot] = 0.0f;
 
-	UserParams[ReverbBypass] = 0.0f;
-    UserParams[ReverbMix] = 0.5f;
-    UserParams[ReverbDecay] = 3.0f;
+	UserParams[ReverbBypass] = reverb.getBypass();
+    UserParams[ReverbMix] = reverb.getMix();
+    UserParams[ReverbDecay] = reverb.getDecayFactor();
 
-    //UserParams[Tap1Delay] = 0;
-    UIUpdateFlag = true;
+	UserParams[InputGain] = 1.0f;
+	UserParams[OutputGain] = 1.0f;
+
     //default host BPM to 120, default in most DAWs
     hostBPM = 120;
 }
@@ -67,28 +69,14 @@ double ShimmerAudioProcessor::getTailLengthSeconds() const
     return 0.0;
 }
 
-//float ShimmerAudioProcessor::getParameter (int index)
-//{
-//    //return the value of the parameter based on which indexed parameter is selected
-//    switch (index) {
-//        case MasterBypass:
-//            return UserParams[MasterBypass];
-//        case Time:
-//            return UserParams[Time];            
-//        case Feedback:
-//            return UserParams[Feedback];
-//        case Mix:
-//            return UserParams[Mix];
-//        case Synch:
-//            return UserParams[Synch];
-//		case Dot:
-//            return UserParams[Dot];     
-//		case SecondDot:
-//            return UserParams[SecondDot];     
-//        default:
-//            return 0.0f;
-//    }
-//}
+float ShimmerAudioProcessor::getParameter (int index)
+{
+    //return the value of the parameter based on which indexed parameter is selected
+	if(index < NumParams)
+		return UserParams[index];
+	else
+		return 0.0f;
+}
 
 template <class T>
 void swap(T& a, T& b)
@@ -108,59 +96,50 @@ void ShimmerAudioProcessor::setParameter (int index, float newValue)
 {
     //set the parameter in the UI when user interacts and pass this
     //value back through to the underlying Delay classes left and right
-	static float old_delay = 0.0f;
+	static float old_delay = 1.0f;
     switch (index) {
         case DelayBypass:
             UserParams[DelayBypass] = newValue;
-            delay_Left.setByPass((bool)UserParams[DelayBypass]);
-            delay_Right.setByPass((bool)UserParams[DelayBypass]);
+            delay.setByPass((bool)UserParams[DelayBypass]);
             break;
         case DelayTime:
             UserParams[DelayTime] = newValue;
 			if(UserParams[DelaySynch] == 1.0f)
 			{
-				delay_Left.setDelay(calculateDelayTap());
-				delay_Right.setDelay(calculateDelayTap());
+				delay.setDelay(calculateDelayTap(UserParams[DelayTime]));
 			}
 			else
 			{
-				delay_Left.setDelay(UserParams[DelayTime]);
-				delay_Right.setDelay(UserParams[DelayTime]);
+				delay.setDelay(UserParams[DelayTime]);
 			}
             break;            
         case DelayFeedback:
             UserParams[DelayFeedback] = newValue;
             //Feedback is received in 0 to +100
-            delay_Left.setFeedback(UserParams[DelayFeedback]);
-            delay_Right.setFeedback(UserParams[DelayFeedback]);
+            delay.setFeedback(UserParams[DelayFeedback]);
             break;
         case DelayMix:
             UserParams[DelayMix] = newValue;
-            delay_Left.setMix(UserParams[DelayMix]);
-            delay_Right.setMix(UserParams[DelayMix]);
+            delay.setMix(UserParams[DelayMix]);
             break;
 		case DelaySynch://???
 			swap(UserParams[DelayTime], old_delay);
 			if(UserParams[DelaySynch] = newValue > 0)
 			{
-				delay_Left.setDelay(calculateDelayTap());
-				delay_Right.setDelay(calculateDelayTap());
+				delay.setDelay(calculateDelayTap(UserParams[DelayTime]));
 			}
 			else
 			{
-				delay_Left.setDelay(UserParams[DelayTime]);
-				delay_Right.setDelay(UserParams[DelayTime]);
+				delay.setDelay(UserParams[DelayTime]);
 			}
 			break;
 		case DelayDot:
 			UserParams[DelayDot] = newValue;
-			delay_Left.setDelay(calculateDelayTap());
-            delay_Right.setDelay(calculateDelayTap());
+			delay.setDelay(calculateDelayTap(UserParams[DelayTime]));
 			break;
 		case DelaySecondDot:
 			UserParams[DelaySecondDot] = newValue;
-			delay_Left.setDelay(calculateDelayTap());
-            delay_Right.setDelay(calculateDelayTap());
+			delay.setDelay(calculateDelayTap(UserParams[DelayTime]));
 			break;
 		case ReverbBypass:
             UserParams[ReverbBypass] = newValue;
@@ -168,11 +147,18 @@ void ShimmerAudioProcessor::setParameter (int index, float newValue)
             break;
         case ReverbMix:
             UserParams[ReverbMix] = newValue;
+			reverb.setMix(UserParams[ReverbMix]);
             break;
         case ReverbDecay:
             UserParams[ReverbDecay] = newValue;
             reverb.setDecayFactor(UserParams[ReverbDecay]);
             break;
+		case InputGain:
+			UserParams[InputGain] = newValue;
+			break;
+		case OutputGain:
+			UserParams[OutputGain] = newValue;
+			break;
         default:
             break;
     }
@@ -300,6 +286,16 @@ bool ShimmerAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) 
 //	buffer is L/R/L/R/L/R etc...
 void ShimmerAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
+	  //  int numSamples = buffer.getNumSamples(); //THIS IS NUM SAMPLES PER CHANNEL
+
+   // for(int channel = 0; channel < getNumInputChannels(); channel++){
+   //     float* channelData = buffer.getWritePointer(channel);
+   //     for(int i = 0; i < numSamples; i+=2){
+   //         channelData[i] = channelData[i] * UserParams[InputGain];
+			//channelData[i] = delay.next(channelData[i] * UserParams[InputGain]); 
+   //     }
+   // }
+
     //get the host BPM and sync playhead to it
     juce::AudioPlayHead::CurrentPositionInfo result;
     juce::AudioPlayHead* jap = getPlayHead();
@@ -311,18 +307,43 @@ void ShimmerAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer&
     int numSamples = buffer.getNumSamples(); //THIS IS NUM SAMPLES PER CHANNEL
        
     float* channelDataLeft = buffer.getWritePointer(0);  //buffer.getSampleData(0);
-    float* channelDataRight = buffer.getWritePointer(1); 
+	float* channelDataRight = buffer.getWritePointer(1); 
+    const float* inChannelDataLeft = buffer.getReadPointer(0);
+	const float* inChannelDataRight = buffer.getReadPointer(1);
 
 	float out_l = 0.0f, out_r = 0.0f;
-    for(int i = 0; i < numSamples; i+=2)
+    for(int i = 0; i < numSamples; i++)
 	{
-        float in_l = channelDataLeft[i], in_r = channelDataRight[i+1];
-                 
-        out_l = delay_Left.next(in_l);                
-        //out_r = delay_Right.next(in_l); 
-        
-		channelDataLeft[i] = UserParams[ReverbMix] * reverb.next(out_l) + (1.0f - UserParams[ReverbMix]) * out_l;
-        channelDataRight[i+1] = UserParams[ReverbMix] * reverb.next(out_l) + (1.0f - UserParams[ReverbMix]) * out_l;
+		//channelDataLeft[i] = channelDataLeft[i] * UserParams[InputGain];
+		//channelDataLeft[i+1] = channelDataLeft[i+1] * UserParams[InputGain];
+
+		/////channelDataLeft[i+1] - левый канал
+        channelDataLeft[i] = inChannelDataLeft[i] * UserParams[InputGain];
+		channelDataRight[i] = inChannelDataRight[i] * UserParams[InputGain];
+		//channelDataLeft[i+1] = channelDataLeft[i+1] * UserParams[InputGain];
+		//channelDataRight[i+1] = channelDataLeft[i] * UserParams[InputGain];
+		
+  //      float in_l = channelDataLeft[i], in_r = channelDataRight[i];
+		out_l = delay.next(channelDataLeft[i]);  
+		out_l = reverb.next(out_l);
+		channelDataLeft[i] = out_l * UserParams[OutputGain];
+		channelDataRight[i] = channelDataLeft[i];
+		//channelDataRight[i] = out_l;
+		//channelDataRight[i+1] = out_r;
+  //      //out_r = delay_Right.next(in_l); 
+  //      
+		////channelDataLeft[i] = reverb.next(out_l);
+		////channelDataLeft[i+1] = reverb.next(out_l);
+		////channelDataLeft[i+1] = channelDataLeft[i];
+		////works:
+		//out_l = reverb.next(out_l);
+		//out_r = reverb.next(out_r);
+		//channelDataLeft[i] = out_l * UserParams[OutputGain];
+		//channelDataRight[i] = out_r * UserParams[OutputGain];
+		//works:
+		//channelDataLeft[i] = UserParams[ReverbMix] * reverb.next(out_l) + (1.0f - UserParams[ReverbMix]) * out_l;
+        //channelDataRight[i+1] = UserParams[ReverbMix] * reverb.next(out_l) + (1.0f - UserParams[ReverbMix]) * out_l;
+		//__________________________
         ////MONO-IN, Stereo Out
         //if(getNumInputChannels() == 1 && getNumOutputChannels() == 2){
         //    channelDataRight[i+1] = channelDataLeft[i]; //copy mono
@@ -335,15 +356,11 @@ void ShimmerAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer&
                     
     }
     
-        
-        // In case we have more outputs than inputs, we'll clear any output
-        // channels that didn't contain input data, (because these aren't
-        // guaranteed to be empty - they may contain garbage).
-        for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i)
-        {
-            buffer.clear (i, 0, buffer.getNumSamples());
-        }
-        
+    for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i)
+    {
+        buffer.clear (i, 0, buffer.getNumSamples());
+    }
+    updateCurrentTimeInfoFromHost();
 }
 
 
@@ -460,12 +477,12 @@ void ShimmerAudioProcessor::setStateInformation (const void* data, int sizeInByt
 // 4 = 1/16 note
 // then sends the result back
 //-------------------------------------------------------------------------
-float ShimmerAudioProcessor::calculateDelayTap()
+float ShimmerAudioProcessor::calculateDelayTap(float tp)
 {
     float result = .0f;
 	float temp = .0f;
-	int tap = static_cast<int>(UserParams[DelayTime]);//!!!
-	result = temp = 60*4*1000/(hostBPM*(tap+1));
+	int tap = static_cast<int>(tp);//!!!
+	result = temp = 60*4*1000/(hostBPM*(tap));
 
 	if(UserParams[DelayDot])
 		result += temp/2;
@@ -473,10 +490,28 @@ float ShimmerAudioProcessor::calculateDelayTap()
 		result += temp/4;
     return result;
 }
+void ShimmerAudioProcessor::updateCurrentTimeInfoFromHost()
+{
+    if (AudioPlayHead* ph = getPlayHead())
+    {
+        AudioPlayHead::CurrentPositionInfo newTime;
 
+        if (ph->getCurrentPosition (newTime))
+        {
+            lastPosInfo = newTime;  // Successfully got the current time from the host..
+			if(lastPosInfo.bpm == 0)
+			lastPosInfo.bpm = this->hostBPM = 120;
+            return;
+        }
+    }
+
+    // If the host fails to provide the current time, we'll just reset our copy to a default..
+    lastPosInfo.resetToDefault();
+}
 //==============================================================================
 // This creates new instances of the plugin..
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new ShimmerAudioProcessor();
 }
+

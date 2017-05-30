@@ -18,21 +18,26 @@ public:
     void paint (Graphics&) override;
     void resized() override;
 
-	void sliderValueChanged (Slider* sliderThatWasMoved);
-    void buttonClicked (Button* buttonThatWasClicked);
+	void sliderValueChanged (Slider* sliderThatWasMoved) override;
+    void buttonClicked (Button* buttonThatWasClicked) override;
     void visibilityChanged();
 
     void timerCallback();
 
 	const String setSyncLabel(int sl);
 private:
-	static const int window_width = 500;
-	static const int window_height = 500;
+	static const int window_width = 550;
+	static const int window_height = 550;
 
 	Image background_image;
 
     ShimmerAudioProcessor& processor;
 	
+	ScopedPointer<Label> InputGainLabel;
+	ScopedPointer<Slider> InputGainKnob;
+	ScopedPointer<Label> OutputGainLabel;
+	ScopedPointer<Slider> OutputGainKnob;
+
 	struct Octaver_GUI_Components{
 		Octaver_GUI_Components(AudioProcessorEditor* ae, ButtonListener* bl, SliderListener* sl)
 		{
@@ -73,7 +78,7 @@ private:
 			
 			ae->addAndMakeVisible (MixKnob = new Slider ("Mix Knob"));
 			MixKnob->setExplicitFocusOrder (1);
-			MixKnob->setRange (0, 1, 0);
+			MixKnob->setRange (0, 1, 0.01);
 			MixKnob->setSliderStyle (Slider::Rotary);
 			MixKnob->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
 			MixKnob->setColour (Slider::backgroundColourId, Colours::cadetblue);
@@ -178,6 +183,14 @@ private:
     groupComponent->setColour (GroupComponent::outlineColourId, Colour (0x66ebe9e9));
     groupComponent->setColour (GroupComponent::textColourId, Colours::grey);
 
+	ae->addAndMakeVisible (timecodeDisplayLabel = new Label ("Time Code",
+                                                TRANS("")));
+    timecodeDisplayLabel->setJustificationType (Justification::centred);
+    timecodeDisplayLabel->setEditable (false, false, false);
+    timecodeDisplayLabel->setColour (Label::textColourId, Colours::azure);
+    timecodeDisplayLabel->setColour (TextEditor::textColourId, Colours::black);
+    timecodeDisplayLabel->setColour (TextEditor::backgroundColourId, Colour (0x00ffffff));
+
     ae->addAndMakeVisible (DelayLabel = new Label ("Delay 1 Label",
                                                 TRANS("Delay")));
     DelayLabel->setFont (Font (Font::getDefaultMonospacedFontName(), 18.00f, Font::bold));
@@ -210,7 +223,7 @@ private:
 
 	ae->addAndMakeVisible (DelayKnob = new Slider ("Delay Knob"));
     //DelayKnob->setExplicitFocusOrder (3);
-    DelayKnob->setRange (0, 2000, 5);
+    DelayKnob->setRange (0, 2000, 1);
     DelayKnob->setSliderStyle (Slider::Rotary);
     DelayKnob->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
     DelayKnob->setColour (Slider::backgroundColourId, Colours::cadetblue);
@@ -225,7 +238,7 @@ private:
 
     ae->addAndMakeVisible (MixKnob = new Slider ("Mix Knob"));
     //MixKnob->setExplicitFocusOrder (3);
-    MixKnob->setRange (0, 100, 1);
+    MixKnob->setRange (0, 1, 0.01);
     MixKnob->setSliderStyle (Slider::Rotary);
     MixKnob->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
     MixKnob->setColour (Slider::backgroundColourId, Colours::cadetblue);
@@ -241,7 +254,7 @@ private:
 	ae->addAndMakeVisible (FeedbackKnob = new Slider ("Feedback Knob"));
     FeedbackKnob->setTooltip (TRANS("Feedback"));
     FeedbackKnob->setExplicitFocusOrder (2);
-    FeedbackKnob->setRange (0, 100, 1);
+    FeedbackKnob->setRange (0, 1, 0.01);
     FeedbackKnob->setSliderStyle (Slider::Rotary);
     FeedbackKnob->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
     FeedbackKnob->setColour (Slider::backgroundColourId, Colours::cadetblue);
@@ -303,8 +316,8 @@ private:
 		groupComponent->setBounds(r);
 		r.reduce(indent, indent);
 		Rectangle<int> button_bypass_area (r.removeFromTop (button_height));
-		button_bypass_area.setWidth(button_bypass_area.proportionOfWidth(0.15f));
-		BypassButton->setBounds(button_bypass_area);
+		BypassButton->setBounds(button_bypass_area.removeFromLeft(button_bypass_area.proportionOfWidth(0.15f)));
+		timecodeDisplayLabel->setBounds (button_bypass_area);
 
 		Rectangle<int> button_area (r.removeFromBottom (button_height));
 		SynchButton->setBounds(button_area.removeFromLeft(button_area.getWidth()/3));
@@ -327,6 +340,7 @@ private:
 		FeedbackKnob->setBounds (feedback_area);
 	}
     ScopedPointer<GroupComponent> groupComponent;
+	ScopedPointer<Label> timecodeDisplayLabel;
     ScopedPointer<Label> DelayLabel;
     ScopedPointer<Label> MixLabel;
 	ScopedPointer<Label> FeedbackLabel;
@@ -371,9 +385,9 @@ private:
 			MixLabel->setColour (TextEditor::backgroundColourId, Colour (0x00ffffff));
 
 			ae->addAndMakeVisible (DecayKnob = new Slider ("Decay Knob"));
-			DecayKnob->setTooltip (TRANS("Delay in milliseconds"));
+			DecayKnob->setTooltip (TRANS("Decay"));
 			DecayKnob->setExplicitFocusOrder (1);
-			DecayKnob->setRange (0.01, 60, 0);
+			DecayKnob->setRange (0.01, 60, 0.01);
 			DecayKnob->setSliderStyle (Slider::Rotary);
 			DecayKnob->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
 			DecayKnob->setColour (Slider::backgroundColourId, Colours::cadetblue);
@@ -388,7 +402,7 @@ private:
 
 			ae->addAndMakeVisible (MixKnob = new Slider ("Mix Knob"));
 			MixKnob->setExplicitFocusOrder (1);
-			MixKnob->setRange (0, 1, 0);
+			MixKnob->setRange (0, 1, 0.01);
 			MixKnob->setSliderStyle (Slider::Rotary);
 			MixKnob->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
 			MixKnob->setColour (Slider::backgroundColourId, Colours::cadetblue);
@@ -461,6 +475,7 @@ private:
 		ScopedPointer<TextButton> BypassButton;
 		ScopedPointer<GroupComponent> groupComponent;
 	} reverb_gui_components;
+	void updateTimecodeDisplay (AudioPlayHead::CurrentPositionInfo pos);
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ShimmerAudioProcessorEditor)
 };
 

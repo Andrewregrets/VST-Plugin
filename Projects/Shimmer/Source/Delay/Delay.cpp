@@ -11,15 +11,16 @@ Delay::Delay(float d_ms_max, int sr, float d_ms, float fb, float mix, bool bp)
     
 Delay::~Delay(){}
 
+float Delay::getDelayTimeMS() {return delay_line.getDelayTimeMS();}
 float Delay::getFeedback(){return feedback;}
 
 float Delay::getMix(){return mixLevel;}
 
 bool Delay::getByPass(){return delay_bypass;}
 
-void Delay::setFeedback(float f){feedback = f/100;}
+void Delay::setFeedback(float f){feedback = f;}
 
-void Delay::setMix(float m){mixLevel = m/100;}
+void Delay::setMix(float m){mixLevel = m;}
 
 void Delay::setByPass(bool bp){delay_bypass = bp;}
 
