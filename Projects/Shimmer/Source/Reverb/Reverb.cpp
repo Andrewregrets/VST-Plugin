@@ -42,9 +42,9 @@ SReverb::SReverb(const int sr, const float rt60,
     setCombDelay(3,sr,d_ms);
     
     d_ms_max = 20.0f;
-    //gain = calcAPGain(aDelay1, 96.83);
+    gain = calcAPGain(aDelay1, 96.83);
     allpasses[0] = new Allpass(sr, aDelay1, d_ms_max, aGain1);
-    //gain = calcAPGain(aDelay2, 32.92);
+    gain = calcAPGain(aDelay2, 32.92);
     allpasses[1] = new Allpass(sr, aDelay2, d_ms_max, aGain2);
     
     lowpasses[0] = new Lowpass(sr, lCutoff1);

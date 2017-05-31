@@ -29,5 +29,6 @@ float Comb::next(const float in){
     
     float dLW = in + lpRetVal*gain;
     delay->writeDelay(dLW);
+
     return dL;  
 }
