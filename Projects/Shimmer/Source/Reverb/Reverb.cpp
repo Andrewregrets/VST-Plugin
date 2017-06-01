@@ -42,9 +42,9 @@ SReverb::SReverb(const int sr, const float rt60,
     setCombDelay(3,sr,d_ms);
     
     d_ms_max = 20.0f;
-    gain = calcAPGain(aDelay1, 96.83);
+    //gain = calcAPGain(aDelay1, 96.83);
     allpasses[0] = new Allpass(sr, aDelay1, d_ms_max, aGain1);
-    gain = calcAPGain(aDelay2, 32.92);
+    //gain = calcAPGain(aDelay2, 32.92);
     allpasses[1] = new Allpass(sr, aDelay2, d_ms_max, aGain2);
     
     lowpasses[0] = new Lowpass(sr, lCutoff1);
@@ -98,7 +98,6 @@ float SReverb::next(const float in){
     
     for(int i = 0; i < NUM_COMBS; i++){
         out += combs[i]->next(in * 0.125f); //scale down to avoid clipping
-        //out+= combs[i]->next(in * 0.5);
     }
     
     float passOut = 0.0f;
@@ -107,11 +106,7 @@ float SReverb::next(const float in){
     passOut = allpasses[0]->next(out);
     passOut2 = allpasses[1]->next(passOut);
   
-    //out = allpasses[1]->next((1.0f - allpasses[1]->getGain()) * allpasses[0]->next((1.0f - allpasses[0]->getGain()) * out));//still working out best way to avoid clipping
-    
-    //KH***return lowpasses[0]->next(passOut2 * NUM_COMBS); //scale back up (not all the way) at output
     return 	mix * passOut2 * NUM_COMBS + (1.0f - mix) * in;
-    //return passOut2;
 }
 
 void SReverb::setMix(float value)

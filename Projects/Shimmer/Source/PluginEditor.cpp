@@ -159,18 +159,16 @@ void ShimmerAudioProcessorEditor::sliderValueChanged (Slider* sliderThatWasMoved
 
 void ShimmerAudioProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
 {
-	static bool synch_mode_on = false;
-	static float old_delay;
     if (buttonThatWasClicked == delay_gui_components.BypassButton)
     {
-        processor.setParameterNotifyingHost(ShimmerAudioProcessor::DelayBypass, (float)delay_gui_components.BypassButton->getToggleState());
+        processor.setParameterNotifyingHost(ShimmerAudioProcessor::DelayBypass, (float)buttonThatWasClicked->getToggleState());
     }
 	else if (buttonThatWasClicked == delay_gui_components.SynchButton)
     {
-		synch_mode_on = !synch_mode_on;
+		bool synch_mode_on = buttonThatWasClicked->getToggleState();
 		delay_gui_components.DottedButton->setVisible(synch_mode_on);
 		delay_gui_components.SecondDottedButton->setVisible(synch_mode_on);
-        processor.setParameterNotifyingHost(ShimmerAudioProcessor::DelaySynch, (float)delay_gui_components.SynchButton->getToggleState());
+        processor.setParameterNotifyingHost(ShimmerAudioProcessor::DelaySynch, (float)buttonThatWasClicked->getToggleState());
 		if(synch_mode_on)
 		{
 			delay_gui_components.DelayLabel->setText("Denominator",NotificationType::dontSendNotification);
@@ -181,19 +179,19 @@ void ShimmerAudioProcessorEditor::buttonClicked (Button* buttonThatWasClicked)
 			delay_gui_components.DelayLabel->setText("Delay", NotificationType::dontSendNotification);
 			delay_gui_components.DelayKnob->setRange (0, 2000, 5);
 		}
-		delay_gui_components.DelayKnob->setValue(processor.getDelayParam());
+		delay_gui_components.DelayKnob->setValue(processor.getParameter(ShimmerAudioProcessor::DelayTime));
     }
 	else if (buttonThatWasClicked == delay_gui_components.DottedButton)
     {
-        processor.setParameterNotifyingHost(ShimmerAudioProcessor::DelayDot, (float)delay_gui_components.DottedButton->getToggleState());
+        processor.setParameterNotifyingHost(ShimmerAudioProcessor::DelayDot, (float)buttonThatWasClicked->getToggleState());
     }
 	else if (buttonThatWasClicked == delay_gui_components.SecondDottedButton)
     {
-        processor.setParameterNotifyingHost(ShimmerAudioProcessor::DelaySecondDot, (float)delay_gui_components.SecondDottedButton->getToggleState());
+        processor.setParameterNotifyingHost(ShimmerAudioProcessor::DelaySecondDot, (float)buttonThatWasClicked->getToggleState());
     }
 	else if (buttonThatWasClicked == reverb_gui_components.BypassButton)
     {
-        processor.setParameterNotifyingHost(ShimmerAudioProcessor::ReverbBypass, (float)reverb_gui_components.BypassButton->getToggleState());
+        processor.setParameterNotifyingHost(ShimmerAudioProcessor::ReverbBypass, (float)buttonThatWasClicked->getToggleState());
     }
 }
 

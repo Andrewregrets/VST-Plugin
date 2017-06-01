@@ -81,7 +81,6 @@ public:
     void RaiseUIUpdateFlag(){UIUpdateFlag = true;};
     //function added to calculate delay tap note values
     float calculateDelayTap(float tap);
-	float getDelayParam();
 	AudioPlayHead::CurrentPositionInfo lastPosInfo;
 private:
 	void updateCurrentTimeInfoFromHost();

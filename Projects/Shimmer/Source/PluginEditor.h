@@ -58,7 +58,6 @@ private:
 
 			ae->addAndMakeVisible (OctaveLowLabel = new Label ("Octave Low Label",
 												TRANS("Octave Low")));
-			//MixLabel->setTooltip (TRANS("Wet/Dry Mix"));
 			OctaveLowLabel->setFont (Font (Font::getDefaultMonospacedFontName(), 18.00f, Font::bold));
 			OctaveLowLabel->setJustificationType (Justification::centred);
 			OctaveLowLabel->setEditable (false, false, false);
@@ -68,7 +67,6 @@ private:
 
 			ae->addAndMakeVisible (OctaveHighLabel = new Label ("Octave High Label",
 												TRANS("Octave high")));
-			//OctaveHighLabel->setTooltip (TRANS("Wet/Dry Mix"));
 			OctaveHighLabel->setFont (Font (Font::getDefaultMonospacedFontName(), 18.00f, Font::bold));
 			OctaveHighLabel->setJustificationType (Justification::centred);
 			OctaveHighLabel->setEditable (false, false, false);
@@ -92,8 +90,6 @@ private:
 			MixKnob->addListener (sl);
 
 			ae->addAndMakeVisible (OctaveLowKnob = new Slider ("Octave Low Knob"));
-			//OctaveLowKnob->setTooltip (TRANS("Delay in milliseconds"));
-			//OctaveLowKnob->setExplicitFocusOrder (1);
 			OctaveLowKnob->setRange (0, 1, 0);
 			OctaveLowKnob->setSliderStyle (Slider::Rotary);
 			OctaveLowKnob->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
@@ -108,7 +104,6 @@ private:
 			OctaveLowKnob->addListener (sl);
 
 			ae->addAndMakeVisible (OctaveHighKnob = new Slider ("Octave High Knob"));
-			//OctaveHighKnob->setTooltip (TRANS("Delay in milliseconds"));
 			OctaveHighKnob->setExplicitFocusOrder (1);
 			OctaveHighKnob->setRange (0, 1, 0);
 			OctaveHighKnob->setSliderStyle (Slider::Rotary);
@@ -222,7 +217,6 @@ private:
 
 
 	ae->addAndMakeVisible (DelayKnob = new Slider ("Delay Knob"));
-    //DelayKnob->setExplicitFocusOrder (3);
     DelayKnob->setRange (0, 2000, 1);
     DelayKnob->setSliderStyle (Slider::Rotary);
     DelayKnob->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
@@ -237,7 +231,6 @@ private:
     DelayKnob->addListener (sl);
 
     ae->addAndMakeVisible (MixKnob = new Slider ("Mix Knob"));
-    //MixKnob->setExplicitFocusOrder (3);
     MixKnob->setRange (0, 1, 0.01);
     MixKnob->setSliderStyle (Slider::Rotary);
     MixKnob->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
@@ -437,23 +430,7 @@ private:
 			Rectangle<int> button_bypass_area (r.removeFromTop (button_height));
 			button_bypass_area.setWidth(button_bypass_area.proportionOfWidth(0.15f));
 			BypassButton->setBounds(button_bypass_area);
-			//
-
-		//Rectangle<int> delay_area (r);
-		//Rectangle<int> slider_area (delay_area.removeFromTop (delay_area.getHeight()));
-
-		//Rectangle<int> mix_area(slider_area.removeFromLeft (slider_area.getWidth()/3));
-		//MixLabel->setBounds (mix_area.removeFromTop(text_height));
-		//MixKnob->setBounds (mix_area);
-
-		//Rectangle<int> time_area(slider_area.removeFromLeft (slider_area.getWidth()/2));
-		//DelayLabel->setBounds(time_area.removeFromTop(text_height));
-		//DelayKnob->setBounds (time_area);
-
-		//Rectangle<int> feedback_area(slider_area.removeFromLeft (slider_area.getWidth()));
-		//FeedbackLabel->setBounds (feedback_area.removeFromTop (text_height));
-		//FeedbackKnob->setBounds (feedback_area);
-		////
+			
 			Rectangle<int> reverb_area (r);
 	
 			Rectangle<int> slider_area (reverb_area.removeFromTop (reverb_area.getHeight()));

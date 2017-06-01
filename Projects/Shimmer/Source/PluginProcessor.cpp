@@ -87,11 +87,6 @@ void swap(T& a, T& b)
 	b = temp;
 }
 
-float ShimmerAudioProcessor::getDelayParam()
-{
-	return UserParams[DelayTime];
-}
-
 void ShimmerAudioProcessor::setParameter (int index, float newValue)
 {
     //set the parameter in the UI when user interacts and pass this
@@ -297,12 +292,7 @@ void ShimmerAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer&
    // }
 
     //get the host BPM and sync playhead to it
-    juce::AudioPlayHead::CurrentPositionInfo result;
-    juce::AudioPlayHead* jap = getPlayHead();
-    jap->getCurrentPosition(result);
 
-	if(result.bpm != 0)
-		this->hostBPM = result.bpm;
 
     int numSamples = buffer.getNumSamples(); //THIS IS NUM SAMPLES PER CHANNEL
        
@@ -481,8 +471,7 @@ float ShimmerAudioProcessor::calculateDelayTap(float tp)
 {
     float result = .0f;
 	float temp = .0f;
-	int tap = static_cast<int>(tp);//!!!
-	result = temp = 60*4*1000/(hostBPM*(tap));
+	result = temp = 60*4*1000/(hostBPM*(tp));
 
 	if(UserParams[DelayDot])
 		result += temp/2;
@@ -490,6 +479,7 @@ float ShimmerAudioProcessor::calculateDelayTap(float tp)
 		result += temp/4;
     return result;
 }
+
 void ShimmerAudioProcessor::updateCurrentTimeInfoFromHost()
 {
     if (AudioPlayHead* ph = getPlayHead())
@@ -500,7 +490,7 @@ void ShimmerAudioProcessor::updateCurrentTimeInfoFromHost()
         {
             lastPosInfo = newTime;  // Successfully got the current time from the host..
 			if(lastPosInfo.bpm == 0)
-			lastPosInfo.bpm = this->hostBPM = 120;
+			lastPosInfo.bpm = this->hostBPM = 77.42;
             return;
         }
     }
