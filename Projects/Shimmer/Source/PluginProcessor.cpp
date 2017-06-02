@@ -118,6 +118,7 @@ void ShimmerAudioProcessor::setParameter (int index, float newValue)
             delay.setMix(UserParams[DelayMix]);
             break;
 		case DelaySynch://???
+			UserParams[DelaySynch] = newValue;
 			swap(UserParams[DelayTime], old_delay);
 			if(UserParams[DelaySynch] = newValue > 0)
 			{
